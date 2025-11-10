@@ -1,0 +1,256 @@
+# Этот файл является скриптом для настройк HQ-SRV (модуль 1)
+# Для исполнения скрипта нужно выполнить несколько действий
+# Перейдите к папке со скриптом
+# Используйте команду chmod +x HQ-SRV.txt для возможности запуска скрипта
+# Используйте команду ./HQ-SRV.txt для запуска скрипта
+# В некоторых местах необходимо вручную ввести пароли
+# или можно поменять ip-адреса
+# или для проверки использовать sudo mcedit и выходить из режимов
+
+#!/bin/bash
+set -e
+echo "Запускаем скрипт!"
+sleep 7
+clear
+sleep 7
+echo "hostnamectl hostname hq-srv.au-team.irpo"
+hostnamectl hostname hq-srv.au-team.irpo
+echo "hostnamectl"
+hostnamectl
+sleep 7
+echo "timedatectl set-timezone Europe/Moscow"
+timedatectl set-timezone Europe/Moscow
+echo "timedatectl"
+timedatectl
+sleep 7
+echo "mcedit /etc/net/ifaces/ens18/options"
+sed -i '1c\BOOTPROTO=static' /etc/net/ifaces/ens18/options
+sed -i '4c\SYSTEMD_BOOTPROTO=static' /etc/net/ifaces/ens18/options
+echo "cat /etc/net/ifaces/ens18/options"
+cat /etc/net/ifaces/ens18/options
+sleep 7
+
+
+# Начало момента где можно поменять сетевые настройки сервера
+
+echo "echo 192.168.1.2/26 > /etc/net/ifaces/ens18/ipv4address"
+echo 192.168.1.2/26 > /etc/net/ifaces/ens18/ipv4address
+sleep 7
+echo "echo default via 192.168.1.1 > /etc/net/ifaces/ens18/ipv4route"
+echo default via 192.168.1.1 > /etc/net/ifaces/ens18/ipv4route
+sleep 7
+echo "echo nameserver 77.88.8.8 > /etc/net/ifaces/ens18/resolv.conf"
+echo nameserver 77.88.8.8 > /etc/net/ifaces/ens18/resolv.conf
+
+# Конец момента где можно поменять сетевые настройки сервера
+
+
+sleep 7
+echo "systemctl restart network"
+systemctl restart network
+sleep 7
+echo "apt-get update"
+apt-get update
+sleep 7
+echo "apt-get install -y bind bind-utils"
+apt-get install -y bind bind-utils
+sleep 7
+echo "useradd -m sshuser -u 2026 -s /bin/bash"
+useradd -m sshuser -u 2026 -s /bin/bash
+sleep 7
+echo "passwd sshuser"
+passwd sshuser
+sleep 7
+echo "usermod -aG wheel sshuser"
+usermod -aG wheel sshuser
+sleep 7
+echo "mcedit /etc/sudoers"
+sed -i '100c\WHEEL_USERS ALL=(ALL:sshuser) NOPASSWD: ALL' /etc/sudoers
+echo "cat /etc/sudoers"
+cat /etc/sudoers
+sleep 7
+echo "su - sshuser"
+su - sshuser
+sleep 7
+echo "mcedit /etc/openssh/sshd_config"
+sed -i '13c\Port 2026' /etc/openssh/sshd_config
+sed -i '30c\AllowUsers sshuser' /etc/openssh/sshd_config
+sed -i '34c\MaxAuthTries 2' /etc/openssh/sshd_config
+sed -i '105c\Banner /etc/banner.net' /etc/openssh/sshd_config
+echo "cat /etc/openssh/sshd_config"
+cat /etc/openssh/sshd_config
+sleep 7
+echo "mcedit /etc/banner.net"
+touch /etc/banner.net
+echo Authorized access only! > /etc/banner.net
+sed -i '1a\ ' /etc/openssh/sshd_config
+echo "cat /etc/banner.net"
+cat /etc/banner.net
+sleep 7
+echo "systemctl restart sshd.service"
+systemctl restart sshd.service
+sleep 7
+echo "ssh -p 2026 sshuser@localhost"
+ssh -p 2026 sshuser@localhost
+sleep 7
+echo "mcedit /etc/bind/named.conf"
+sed -i '6c\#include "/etc/bind/rndc.conf";' /etc/bind/named.conf
+echo "cat /etc/bind/named.conf"
+cat /etc/bind/named.conf
+sleep 7
+echo "mcedit /etc/bind/options.conf"
+
+
+# При смене стандартного адреса, выставить соответствующий в строку ниже
+
+sed -i '16c\\tlisten-on { 192.168.1.2; };' /etc/bind/options.conf
+
+
+sed -i '17c\\t//listen-on-v6 { ::1; };' /etc/bind/options.conf
+sed -i '24c\\tforwarders { 77.88.8.8; };' /etc/bind/options.conf
+sed -i '29c\\tallow-query { any; };' /etc/bind/options.conf
+sed -i '40c\\tallow-query-cache { any; };' /etc/bind/options.conf
+sed -i '49c\\tallow-recursion { any; };' /etc/bind/options.conf
+echo "cat /etc/bind/options.conf"
+cat /etc/bind/options.conf 
+sleep 7
+echo "mcedit /etc/bind/local.conf"
+sed -i '7a\ ' /etc/bind/local.conf
+sed -i '8c\zone "au-team.irpo" {' /etc/bind/local.conf
+sed -i '8a\ ' /etc/bind/local.conf
+sed -i '9c\    type master;' /etc/bind/local.conf
+sed -i '9a\ ' /etc/bind/local.conf
+sed -i '10c\    file "/etc/bind/zone/db.au";' /etc/bind/local.conf
+sed -i '10a\ ' /etc/bind/local.conf
+sed -i '11c\};' /etc/bind/local.conf
+sed -i '11a\ ' /etc/bind/local.conf
+sed -i '12c\zone "1.168.192.in-addr.arpa" {' /etc/bind/local.conf
+sed -i '12a\ ' /etc/bind/local.conf
+sed -i '13c\    type master;' /etc/bind/local.conf
+sed -i '13a\ ' /etc/bind/local.conf
+sed -i '14c\    file "/etc/bind/zone/db.revers";' /etc/bind/local.conf
+sed -i '14a\ ' /etc/bind/local.conf
+sed -i '15c\};' /etc/bind/local.conf
+sed -i '15a\ ' /etc/bind/local.conf
+echo "cat /etc/bind/local.conf"
+cat /etc/bind/local.conf
+sleep 7
+echo "cd /etc/bind/zone"
+cd /etc/bind/zone
+sleep 7
+echo "cp localhost db.au"
+cp localhost db.au
+sleep 7
+echo "mcedit db.au"
+sed -i '2c\@\tIN\tSOA\tau-team.irpo. root.au-team.irpo. (' db.au
+sed -i '9c\\tIN\tNS\tau-team.irpo.' db.au
+
+
+# При смене стандартного адреса, выставить соответствующий в строку ниже 
+
+sed -i '10c\\tIN\tA\t192.168.1.2' db.au
+
+
+echo "cat db.au"
+cat db.au
+sleep 7
+echo "cp db.au db.revers"
+cp db.au db.revers
+echo "chown root:named db.*"
+chown root:named db.*
+sleep 7
+echo "mcedit db.au"
+
+
+# Начало момента где (возможно) нужно много менять
+
+sed -i '10a\ ' db.au
+sed -i '11c\hq-srv\tIN\tA\t192.168.1.2' db.au
+sed -i '11a\ ' db.au
+sed -i '12c\hq-rtr\tIN\tA\t192.168.1.1' db.au
+sed -i '12a\ ' db.au
+sed -i '13c\br-srv\tIN\tA\t192.168.2.2' db.au
+sed -i '13a\ ' db.au
+sed -i '14c\br-rtr\tIN\tA\t192.168.2.1' db.au
+sed -i '14a\ ' db.au
+sed -i '15c\hq-cli\tIN\tA\t192.168.1.66' db.au
+sed -i '15a\ ' db.au
+sed -i '16c\docker\tIN\tCNAME\thq-rtr' db.au
+sed -i '16a\ ' db.au
+sed -i '17c\web\tIN\tCNAME\tbr-rtr' db.au
+sed -i '17a\ ' db.au
+echo "cat db.au"
+cat db.au
+sleep 7
+echo "mcedit db.revers"
+sed -i '10a\ ' db.revers
+sed -i '11c\1\tIN\tPTR\thq-rtr.au-team.irpo.' db.revers
+sed -i '11a\ ' db.revers
+sed -i '12c\2\tIN\tPTR\thq-srv.au-team.irpo.' db.revers
+sed -i '12a\ ' db.revers
+sed -i '13c\66\tIN\tPTR\thq-cli.au-team.irpo.' db.revers
+
+# Конец момента где (возможно) нужно много менять
+
+
+sed -i '13a\ ' db.revers
+echo "cat db.revers"
+cat db.revers
+sleep 7
+echo "cd /etc/bind/zone/"
+cd /etc/bind/zone/
+sleep 7
+echo "systemctl restart network"
+systemctl restart network
+sleep 7
+echo "systemctl restart bind"
+systemctl restart bind
+sleep 7
+echo "named-checkzone au-team.irpo db.au"
+named-checkzone au-team.irpo db.au
+sleep 7
+
+
+# Место где возможно нужно что-то менять
+
+echo "named-checkzone 1.168.192.in-addr.arpa db.revers"
+named-checkzone 1.168.192.in-addr.arpa db.revers
+
+
+sleep 7
+echo "mcedit /etc/net/ifaces/ens18/resolv.conf"
+
+
+# Место где возможно нужно что-то менять
+
+sed -i '1c\nameserver 192.168.1.2' /etc/net/ifaces/ens18/resolv.conf
+
+
+sed -i '1a\ ' /etc/net/ifaces/ens18/resolv.conf
+sed -i '2c\search au-team.irpo' /etc/net/ifaces/ens18/resolv.conf
+echo "cat /etc/net/ifaces/ens18/resolv.conf"
+cat /etc/net/ifaces/ens18/resolv.conf
+sleep 7
+echo "systemctl restart network"
+systemctl restart network
+sleep 7
+echo "systemctl restart bind"
+systemctl restart bind
+sleep 7
+echo "host hq-srv"
+host hq-srv
+sleep 7
+
+
+# Место где возможно нужно что-то менять
+
+echo "host 192.168.1.2"
+host 192.168.1.2
+
+
+sleep 7
+echo "host web"
+host web
+sleep 7
+echo "host ya.ru"
+host ya.ru

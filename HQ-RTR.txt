@@ -1,0 +1,127 @@
+en
+conf t
+hostname hq-rtr.au-team.irpo
+username net_admin
+password P@ssw0rd
+role admin
+ntp timezone utc+3
+ex
+wr
+conf t
+int isp
+# Меняйте IP-адреса здесь!!!
+ip address 172.16.4.14/28
+int 100
+ip address 192.168.1.1/26
+int 200
+ip address 192.168.1.65/28
+int 999
+ip address 192.168.1.81/29
+# Меняйте IP-адреса здесь!!!
+port te0
+service-instance isp
+encapsulation untagged
+connect ip interface isp
+port te1
+service-instance 100
+encapsulation dot1q 100
+rewrite pop 1
+connect ip interface 100
+ex
+service-instance 200
+encapsulation dot1q 200
+rewrite pop 1
+connect ip interface 200
+ex
+service-instance 999
+encapsulation dot1q 999
+rewrite pop 1
+connect ip interface 999
+ex
+ex
+# Меняйте IP-адреса здесь!!!
+ip route 0.0.0.0/0 172.16.4.1
+ip name-server 77.88.8.8
+ip nat pool INTERNET 192.168.1.1-192.168.1.87
+ip nat source dynamic inside-to-outside pool INTERNET overload 172.16.4.14
+# Меняйте IP-адреса здесь!!!
+int isp
+ip nat outside
+ex
+int 100
+ip nat inside
+ex
+int 200
+ip nat inside
+ex
+int 999
+ip nat inside
+ex
+ex
+wr
+conf t
+int tunnel.1
+# Меняйте IP-адреса здесь!!!
+ip address 10.10.10.9/30
+ip tunnel 172.16.4.14 172.16.5.14 mode gre
+# Меняйте IP-адреса здесь!!!
+ex
+ex
+wr
+conf t
+router ospf 1
+# Меняйте IP-адреса здесь!!!
+network 10.10.10.8/30 area 0
+network 192.168.1.0/26 area 0
+network 192.168.1.64/28 area 0
+network 192.168.1.80/29 area 0
+# Меняйте IP-адреса здесь!!!
+passive-interface isp
+passive-interface 100
+passive-interface 200
+passive-interface 999
+area 0 authentication message-digest
+ex
+int tunnel.1
+ip ospf authentication-key P@ssw0rd
+ip ospf authentication message-digest
+ex
+ex
+wr
+ex
+
+
+# Только после конфигурации HQ-SRV и HQ-CLI!!!
+en
+conf t
+# Меняйте IP-адреса и другое здесь!!!
+ip name-server 192.168.1.2
+ip domain-name au-team.irpo
+ip domain-lookup
+no ip name-server 77.88.8.8
+# Меняйте IP-адреса и другое здесь!!!
+ex
+wr
+conf t
+# Меняйте IP-адреса и другое здесь!!!
+ip pool hq 192.168.1.67-192.168.1.78
+dhcp-server 1
+static ip 192.168.1.66
+# ВНИМАНИЕ ВЫСТАВЬТЕ MAC-адрес HQ-CLI ЗДЕСЬ!!!
+client-id mac XX:XX:XX:XX:XX:XX
+mask 255.255.255.240
+gateway 192.168.1.65
+dns 192.168.1.2
+domain-search au-team.irpo
+ex
+pool hq 1
+mask 255.255.255.240
+gateway 192.168.165
+dns 192.168.1.2
+# Меняйте IP-адреса и другое здесь!!!
+domain-search au-team.irpo
+int 200
+dhcp-server 1
+ex
+wr
+ex

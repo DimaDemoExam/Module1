@@ -1,0 +1,78 @@
+en
+conf t
+hostname br-rtr.au-team.irpo
+username net_admin
+password P@ssw0rd
+role admin
+ntp timezone utc+3
+ex
+wr
+conf t
+int isp
+# Меняйте IP-адреса здесь!!!
+ip address 172.16.5.14/28
+int lan
+ip address 192.168.2.1/27
+# Меняйте IP-адреса здесь!!!
+port te0
+service-instance isp
+encapsulation untagged
+connect ip interface isp
+port te1
+service-instance lan
+encapsulation untagged
+connect ip interface lan
+ex
+ex
+# Меняйте IP-адреса здесь!!!
+ip route 0.0.0.0/0 172.16.5.1
+ip name-server 77.88.8.8
+ip nat pool INTERNET 192.168.2.1-192.168.2.30
+ip nat source dynamic inside-to-outside pool INTERNET overload 172.16.5.14
+# Меняйте IP-адреса здесь!!!
+int isp
+ip nat outside
+int lan
+ip nat inside
+ex
+ex
+wr
+conf t
+int tunnel.1
+# Меняйте IP-адреса здесь!!!
+ip address 10.10.10.10/30
+ip tunnel 172.16.5.14 172.16.4.14 mode gre
+# Меняйте IP-адреса здесь!!!
+ex
+ex
+wr
+conf t
+router ospf 1
+# Меняйте IP-адреса здесь!!!
+network 10.10.10.8/30 area 0
+network 192.168.2.0/27 area 0
+# Меняйте IP-адреса здесь!!!
+area 0 authentication message-digest
+passive-interface isp
+passive-interface lan
+ex
+int tunnel.1
+ip ospf authentication-key P@ssw0rd
+ip ospf authentication message-digest
+ex
+ex
+wr
+ex
+
+
+# Только после конфигурации сервера HQ-SRV!!!
+en
+conf t
+ip name-server 192.168.1.2
+ip domain-name au-team.irpo
+ip domain-lookup
+no ip name-server 77.88.8.8
+ex
+wr
+ping hq-srv
+ex

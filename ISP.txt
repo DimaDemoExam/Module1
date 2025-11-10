@@ -1,0 +1,122 @@
+# Этот файл является скриптом для настройк ISP (модуль 1)
+# Для исполнения скрипта нужно выполнить несколько действий
+# Перейдите к папке со скриптом
+# Используйте команду chmod +x ISP.txt для возможности запуска скрипта
+# Используйте команду ./ISP.txt для запуска скрипта
+# В некоторых местах скрипта можно поменять ip-адрес на необходимый
+
+#!/bin/bash
+set -e
+echo "Запускаем скрипт!"
+sleep 7
+clear
+sleep 7
+echo "hostnamectl hostname isp.au-team.irpo"
+hostnamectl hostname isp.au-team.irpo
+echo "hostnamectl"
+hostnamectl
+sleep 7
+echo "apt-get update"
+apt-get update
+sleep 7
+echo "apt-get install -y mc"
+apt-get install -y mc
+sleep 7
+echo "apt-get install -y tzdata"
+apt-get install -y tzdata
+sleep 7
+echo "apt-get install -y firewalld"
+apt-get install -y firewalld
+sleep 7
+echo "timedatectl set-timezone Europe/Moscow"
+timedatectl set-timezone Europe/Moscow
+echo "timedatectl"
+timedatectl
+sleep 7
+echo "cd /etc/net/ifaces"
+cd /etc/net/ifaces
+echo "cp -r ens18 /etc/net/ifaces/ens19"
+cp -r ens18 /etc/net/ifaces/ens19
+echo "cp -r ens18 /etc/net/ifaces/ens20"
+cp -r ens18 /etc/net/ifaces/ens20
+echo "ls"
+ls
+sleep 7
+echo "mcedit /etc/net/ifaces/ens19/options"
+sed -i '1c\BOOTPROTO=static' /etc/net/ifaces/ens19/options
+echo "cat /etc/net/ifaces/ens19/options"
+cat /etc/net/ifaces/ens19/options
+sleep 7
+echo "mcedit /etc/net/ifaces/ens19/ipv4address"
+touch /etc/net/ifaces/ens19/ipv4address
+
+
+# Для изменения IP адреса ens19 отредактируйте строку ниже
+
+echo 172.16.4.1/28 > /etc/net/ifaces/ens19/ipv4address
+
+
+echo "cat /etc/net/ifaces/ens19/ipv4address"
+cat /etc/net/ifaces/ens19/ipv4address
+sleep 7
+echo "mcedit /etc/net/ifaces/ens20/options"
+sed -i '1c\BOOTPROTO=static' /etc/net/ifaces/ens20/options
+echo "cat /etc/net/ifaces/ens20/options"
+cat /etc/net/ifaces/ens20/options
+sleep 7
+echo "mcedit /etc/net/ifaces/ens20/ipv4address"
+touch /etc/net/ifaces/ens20/ipv4address
+
+
+# Для изменения IP адреса ens20 отредактируйте строку ниже
+
+echo 172.16.5.1/28 > /etc/net/ifaces/ens20/ipv4address
+
+
+echo "cat /etc/net/ifaces/ens20/ipv4address"
+cat /etc/net/ifaces/ens20/ipv4address
+sleep 7
+echo "mcedit /etc/net/sysctl.conf"
+sed -i '10c\net.ipv4.ip_forward = 1' /etc/net/sysctl.conf
+echo "cat /etc/net/sysctl.conf"
+cat /etc/net/sysctl.conf
+sleep 7
+echo "systemctl enable --now firewalld"
+systemctl enable --now firewalld
+echo "firewall-cmd --permanent --zone=public --add-interface=ens18"
+firewall-cmd --permanent --zone=public --add-interface=ens18
+sleep 7
+echo "firewall-cmd --permanent --zone=trusted --add-interface=ens19"
+firewall-cmd --permanent --zone=trusted --add-interface=ens19
+sleep 7
+echo "firewall-cmd --permanent --zone=trusted --add-interface=ens20"
+firewall-cmd --permanent --zone=trusted --add-interface=ens20
+sleep 7
+echo "firewall-cmd --permanent --zone=public --add-masquerade"
+firewall-cmd --permanent --zone=public --add-masquerade
+sleep 7
+echo "firewall-cmd --complete-reload"
+firewall-cmd --complete-reload
+sleep 7
+echo "systemctl restart network"
+systemctl restart network
+sleep 7
+echo "ping ya.ru"
+sleep 7
+ping ya.ru
+sleep 7
+
+
+# При изменении стандартного ip-адреса замените его и в командах ping ниже
+
+echo "ping -I 172.16.4.1 ya.ru"
+ping -I 172.16.4.1 ya.ru
+
+
+sleep 7
+
+
+# При изменении стандартного ip-адреса замените его и в командах ping ниже
+
+echo "ping -I 172.16.5.1 ya.ru"
+ping -I 172.16.5.1 ya.ru

@@ -1,0 +1,91 @@
+# Этот файл является скриптом для настройк BR-SRV (модуль 1)
+# Для исполнения скрипта нужно выполнить несколько действий
+# Перейдите к папке со скриптом
+# Используйте команду chmod +x BR-SRV.txt для возможности запуска скрипта
+# Используйте команду ./BR-SRV.txt для запуска скрипта
+# В некоторых местах необходимо вручную ввести пароли
+# или можно поменять ip-адреса
+# или для проверки использовать sudo mcedit и выходить из режимов
+
+#!/bin/bash
+set -e
+echo "Запускаем скрипт!"
+sleep 7
+clear
+sleep 7
+echo "hostnamectl hostname br-srv.au-team.irpo"
+hostnamectl hostname br-srv.au-team.irpo
+echo "hostnamectl"
+hostnamectl
+sleep 7
+echo "timedatectl set-timezone Europe/Moscow"
+timedatectl set-timezone Europe/Moscow
+echo "timedatectl"
+timedatectl
+sleep 7
+echo "mcedit /etc/net/ifaces/ens18/options"
+sed -i '1c\BOOTPROTO=static' /etc/net/ifaces/ens18/options
+sed -i '4c\SYSTEMD_BOOTPROTO=static' /etc/net/ifaces/ens18/options
+echo "cat /etc/net/ifaces/ens18/options"
+cat /etc/net/ifaces/ens18/options
+sleep 7
+
+
+# Начало момента где можно поменять сетевые настройки сервера
+
+echo "echo 192.168.2.2/27 > /etc/net/ifaces/ens18/ipv4address"
+echo 192.168.2.2/27 > /etc/net/ifaces/ens18/ipv4address
+sleep 7
+echo "echo default via 192.168.2.1 > /etc/net/ifaces/ens18/ipv4route"
+echo default via 192.168.2.1 > /etc/net/ifaces/ens18/ipv4route
+sleep 7
+echo "echo nameserver 77.88.8.8 > /etc/net/ifaces/ens18/resolv.conf"
+echo nameserver 77.88.8.8 > /etc/net/ifaces/ens18/resolv.conf
+
+# Конец момента где можно поменять сетевые настройки сервера
+
+
+sleep 7
+echo "systemctl restart network"
+systemctl restart network
+sleep 7
+echo "ping ya.ru"
+ping ya.ru
+sleep 7
+echo "useradd -m sshuser -u 2026 -s /bin/bash"
+useradd -m sshuser -u 2026 -s /bin/bash
+sleep 7
+echo "passwd sshuser"
+passwd sshuser
+sleep 7
+echo "usermod -aG wheel sshuser"
+usermod -aG wheel sshuser
+sleep 7
+echo "mcedit /etc/sudoers"
+sed -i '100c\WHEEL_USERS ALL=(ALL:sshuser) NOPASSWD: ALL' /etc/sudoers
+echo "cat /etc/sudoers"
+cat /etc/sudoers
+sleep 7
+echo "su - sshuser"
+su - sshuser
+sleep 7
+echo "mcedit /etc/openssh/sshd_config"
+sed -i '13c\Port 2026' /etc/openssh/sshd_config
+sed -i '30c\AllowUsers sshuser' /etc/openssh/sshd_config
+sed -i '34c\MaxAuthTries 2' /etc/openssh/sshd_config
+sed -i '105c\Banner /etc/banner.net' /etc/openssh/sshd_config
+echo "cat /etc/openssh/sshd_config"
+cat /etc/openssh/sshd_config
+sleep 7
+echo "mcedit /etc/banner.net"
+touch /etc/banner.net
+echo Authorized access only! > /etc/banner.net
+sed -i '1a\ ' /etc/openssh/sshd_config
+echo "cat /etc/banner.net"
+cat /etc/banner.net
+sleep 7
+echo "systemctl restart sshd.service"
+systemctl restart sshd.service
+sleep 7
+echo "ssh -p 2026 sshuser@localhost"
+ssh -p 2026 sshuser@localhost

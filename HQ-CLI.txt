@@ -1,0 +1,24 @@
+# Этот файл является скриптом для настройк HQ-CLI (модуль 1)
+# Для исполнения скрипта нужно выполнить несколько действий
+# Перейдите к папке со скриптом
+# Используйте команду chmod +x HQ-CLI.txt для возможности запуска скрипта
+# Используйте команду ./HQ-CLI.txt для запуска скрипта
+
+#!/bin/bash
+set -e
+echo "Запускаем скрипт!"
+sleep 7
+clear
+sleep 7
+echo "hostnamectl hostname hq-cli.au-team.irpo"
+hostnamectl hostname hq-cli.au-team.irpo
+echo "hostnamectl"
+hostnamectl
+sleep 7
+echo "timedatectl set-timezone Europe/Moscow"
+timedatectl set-timezone Europe/Moscow
+echo "timedatectl"
+timedatectl
+sleep 7
+echo "ip a"
+ip a
