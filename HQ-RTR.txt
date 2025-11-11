@@ -104,7 +104,9 @@ ex
 wr
 conf t
 # Меняйте IP-адреса и другое здесь!!!
-ip pool hq 192.168.1.67-192.168.1.78
+ip pool hq 1
+range 192.168.1.67-192.168.1.78
+ex
 dhcp-server 1
 static ip 192.168.1.66
 # ВНИМАНИЕ ВЫСТАВЬТЕ MAC-адрес HQ-CLI ЗДЕСЬ!!!
@@ -116,12 +118,13 @@ domain-search au-team.irpo
 ex
 pool hq 1
 mask 255.255.255.240
-gateway 192.168.165
+gateway 192.168.1.65
 dns 192.168.1.2
 # Меняйте IP-адреса и другое здесь!!!
 domain-search au-team.irpo
 int 200
 dhcp-server 1
+ex
 ex
 wr
 ex
