@@ -102,7 +102,6 @@ echo "systemctl restart network"
 systemctl restart network
 sleep 7
 echo "ping ya.ru"
-sleep 7
 ping ya.ru
 sleep 7
 
@@ -119,4 +118,5 @@ sleep 7
 # При изменении стандартного ip-адреса замените его и в командах ping ниже
 
 echo "ping -I 172.16.5.1 ya.ru"
+
 ping -I 172.16.5.1 ya.ru
