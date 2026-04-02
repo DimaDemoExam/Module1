@@ -5,7 +5,7 @@ set -e
 clear
 hostnamectl hostname isp.au-team.irpo
 apt-get update
-apt-get install -y tzdata && firewalld
+apt-get install -y tzdata firewalld
 timedatectl set-timezone Europe/Moscow
 cd /etc/net/ifaces
 cp -r ens18 /etc/net/ifaces/ens19
