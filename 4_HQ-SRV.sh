@@ -1,5 +1,3 @@
-# 4_HQ-SRV.sh
-
 #!/bin/bash
 set -e
 clear
