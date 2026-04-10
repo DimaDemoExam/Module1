@@ -1,4 +1,3 @@
-# 7_HQ-RTR.sh
 # After HQ-SRV и HQ-CLI!!!
 en
 conf t
