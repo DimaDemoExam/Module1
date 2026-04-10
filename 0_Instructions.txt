@@ -1,3 +1,13 @@
+Module 1:
+1_ISP.sh
+2_HQ-RTR.sh
+3_BR-RTR.sh
+4_HQ-SRV.sh
+5_BR-SRV.sh
+6_HQ-CLI.sh
+7_HQ-RTR.sh
+8_BR-RTR.sh
+
 Для исполнения скрипта нужно выполнить несколько действий:
 1. выполните apt-get update для обновления списка пакетов (Примечание! Если apt-get update выполняется очень долго, то необходимо сменить источник загрузки. Для этого используйте vim и закоментируйте/раскоментируйте нужные строки в /etc/apt/sources.list.d/alt.list (закоментируйте все 3 строки) и в /etc/apt/sources.list.d/yandex.list (раскоментируйте 3 строки https://mirror...))
 2. установите wget и dos2unix используя команду apt-get install -y wget dos2unix
