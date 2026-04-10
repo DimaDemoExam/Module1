@@ -14,7 +14,7 @@ sed -i '1c\BOOTPROTO=static' /etc/net/ifaces/ens19/options
 touch /etc/net/ifaces/ens19/ipv4address
 
 
-# Для изменения IP адреса ens19 отредактируйте строку ниже
+# IP ens19!!!
 
 echo 172.16.4.1/28 > /etc/net/ifaces/ens19/ipv4address
 
@@ -23,7 +23,7 @@ sed -i '1c\BOOTPROTO=static' /etc/net/ifaces/ens20/options
 touch /etc/net/ifaces/ens20/ipv4address
 
 
-# Для изменения IP адреса ens20 отредактируйте строку ниже
+# IP ens20!!!
 
 echo 172.16.5.1/28 > /etc/net/ifaces/ens20/ipv4address
 
@@ -37,12 +37,3 @@ firewall-cmd --permanent --zone=public --add-masquerade
 firewall-cmd --complete-reload
 systemctl restart network
 ping -c 3 ya.ru
-
-
-# При изменении стандартного ip-адреса замените его и в командах ping ниже
-
-ping -c 3 -I 172.16.4.1 ya.ru
-
-# При изменении стандартного ip-адреса замените его и в командах ping ниже
-
-ping -c 3 -I 172.16.5.1 ya.ru
