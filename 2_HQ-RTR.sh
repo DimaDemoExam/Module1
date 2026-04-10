@@ -1,4 +1,4 @@
-# 2_HQ-RTR.txt
+# 2_HQ-RTR.sh
 en
 conf t
 hostname hq-rtr.au-team.irpo
