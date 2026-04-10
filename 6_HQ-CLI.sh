@@ -1,5 +1,3 @@
-# 6_HQ-CLI.sh
-
 #!/bin/bash
 set -e
 clear
