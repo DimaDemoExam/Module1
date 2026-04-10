@@ -1,5 +1,3 @@
-# 5_BR-SRV.sh
-
 #!/bin/bash
 set -e
 clear
