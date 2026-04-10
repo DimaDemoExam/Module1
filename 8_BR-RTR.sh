@@ -1,5 +1,5 @@
-# 8_BR-RTR.txt
-# Только после конфигурации сервера HQ-SRV!!!
+# 8_BR-RTR.sh
+# AFTER HQ-SRV!!!
 en
 conf t
 ip name-server 192.168.1.2
