@@ -9,7 +9,7 @@ Module 1:
 8_BR-RTR.sh
 
 Для исполнения скрипта нужно выполнить несколько действий:
-1. выполните apt-get update для обновления списка пакетов (Примечание! Если apt-get update выполняется очень долго, то необходимо сменить источник загрузки. Для этого используйте vim и закоментируйте/раскоментируйте нужные строки в /etc/apt/sources.list.d/alt.list (закоментируйте все 3 строки) и в /etc/apt/sources.list.d/yandex.list (раскоментируйте 3 строки https://mirror...))
+1. выполните apt-get update для обновления списка пакетов (Примечание! Если apt-get update выполняется очень долго, то необходимо сменить источник загрузки. Для этого используйте vim и закоментируйте/раскоментируйте нужные строки в /etc/apt/sources.list.d/alt.list (закоментируйте все 3 строки) и в /etc/apt/sources.list.d/yandex.list (раскоментируйте 3 строки http://mirror...))
 2. установите wget и dos2unix используя команду apt-get install -y wget dos2unix
 3. c помощью wget скачайте нужный файл скрипта из репозитория используя следующий формат: wget https://raw.githubusercontent.com/DimaDemoExam/<номер модуля>/refs/heads/main/<имя файла>.sh (Пример: wget https://raw.githubusercontent.com/DimaDemoExam/Module1/refs/heads/main/1_ISP.sh)
 4. сконвертируйте файл в нужный формат используя dos2unix: dos2unix <имя файла>.sh
