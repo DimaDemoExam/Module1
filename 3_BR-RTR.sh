@@ -1,4 +1,3 @@
-# 3_BR-RTR.sh
 en
 conf t
 hostname br-rtr.au-team.irpo
