@@ -1,4 +1,3 @@
-# 8_BR-RTR.sh
 # AFTER HQ-SRV!!!
 en
 conf t
