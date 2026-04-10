@@ -1,5 +1,3 @@
-# 1_ISP.txt
-
 #!/bin/bash
 set -e
 clear
