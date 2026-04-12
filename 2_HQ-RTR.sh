@@ -1,3 +1,4 @@
+#START HQ-RTR!!!
 en
 conf t
 hostname hq-rtr.au-team.irpo
