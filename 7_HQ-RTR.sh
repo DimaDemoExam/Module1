@@ -1,3 +1,4 @@
+# START HQ_RTR!!!
 # After HQ-SRV и HQ-CLI!!!
 en
 conf t
