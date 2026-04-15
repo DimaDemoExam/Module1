@@ -1,5 +1,5 @@
 # START HQ_RTR!!!
-# After HQ-SRV и HQ-CLI!!!
+# After HQ-SRV!!!
 en
 conf t
 # SERVER IP!!!
