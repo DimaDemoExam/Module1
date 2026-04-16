@@ -1,3 +1,7 @@
 hostnamectl hostname hq-cli.au-team.irpo
 timedatectl set-timezone Europe/Moscow
 ip a
+sleep 2
+echo "Copy MAC address!"
+sleep 3
+echo "You need it!"
