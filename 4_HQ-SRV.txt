@@ -1,5 +1,4 @@
 hostnamectl hostname hq-srv.au-team.irpo
-hostnamectl
 timedatectl set-timezone Europe/Moscow
 sed -i '1c\BOOTPROTO=static' /etc/net/ifaces/ens18/options
 sed -i '4c\SYSTEMD_BOOTPROTO=static' /etc/net/ifaces/ens18/options
