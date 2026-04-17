@@ -764,6 +764,18 @@ fi
 done
 clear
 #
+echo "cd"
+echo "rm -rf 4_HQ-SRV.txt
+echo "history -c"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
 echo "The End"
 #
 echo "M1_5_BR-SRV"
