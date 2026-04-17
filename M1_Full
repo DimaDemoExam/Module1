@@ -645,7 +645,7 @@ fi
 done
 clear
 #
-network 192.168.2.0/27 area 0
+echo "network 192.168.2.0/27 area 0"
 echo "area 0 authentication message-digest"
 echo "passive-interface isp"
 #
