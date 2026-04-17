@@ -1,0 +1,1399 @@
+echo "Запускаем скрипт!"
+sleep 5
+clear
+#
+echo "M1"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "M1 ISP"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "hostnamectl hostname isp.au-team.irpo"
+echo "apt-get update"
+echo "apt-get install -y tzdata firewalld"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "timedatectl set-timezone Europe/Moscow"
+echo "cd /etc/net/ifaces"
+echo "cp -r ens18 /etc/net/ifaces/ens19"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "cp -r ens18 /etc/net/ifaces/ens20"
+echo "sed -i '1c\BOOTPROTO=static' /etc/net/ifaces/ens19/options"
+echo "touch /etc/net/ifaces/ens19/ipv4address"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "echo 172.16.4.1/28 > /etc/net/ifaces/ens19/ipv4address"
+echo "sed -i '1c\BOOTPROTO=static' /etc/net/ifaces/ens20/options"
+echo "touch /etc/net/ifaces/ens20/ipv4address"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "echo 172.16.5.1/28 > /etc/net/ifaces/ens20/ipv4address"
+echo "sed -i '10c\net.ipv4.ip_forward = 1' /etc/net/sysctl.conf"
+echo "systemctl enable --now firewalld"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "firewall-cmd --permanent --zone=public --add-interface=ens18"
+echo "firewall-cmd --permanent --zone=trusted --add-interface=ens19"
+echo "firewall-cmd --permanent --zone=trusted --add-interface=ens20"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "firewall-cmd --permanent --zone=public --add-masquerade"
+echo "firewall-cmd --complete-reload"
+echo "systemctl restart network"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "The End"
+#
+echo "M1_2_HQ-RTR"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "en"
+echo "conf t"
+echo "hostname hq-rtr.au-team.irpo"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "username net_admin"
+echo "password P@ssw0rd"
+echo "role admin"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ntp timezone utc+3"
+echo "ex"
+echo "wr"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "conf t"
+echo "int isp"
+echo "ip address 172.16.4.14/28"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "int 100"
+echo "ip address 192.168.1.1/26"
+echo "int 200"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ip address 192.168.1.65/28"
+echo "int 999"
+echo "ip address 192.168.1.81/29"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "port te0"
+echo "service-instance isp"
+echo "encapsulation untagged"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "connect ip interface isp"
+echo "port te1"
+echo "service-instance 100"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "encapsulation dot1q 100"
+echo "rewrite pop 1"
+echo "connect ip interface 100"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "service-instance 200"
+echo "encapsulation dot1q 200"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "rewrite pop 1"
+echo "connect ip interface 200"
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "service-instance 999"
+echo "encapsulation dot1q 999"
+echo "rewrite pop 1"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "connect ip interface 999"
+echo "ex"
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ip route 0.0.0.0/0 172.16.4.1"
+echo "ip name-server 77.88.8.8"
+echo "ip nat pool INTERNET 192.168.1.1-192.168.1.87"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ip nat source dynamic inside-to-outside pool INTERNET overload 172.16.4.14"
+echo "int isp"
+echo "ip nat outside"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "int 100"
+echo "ip nat inside"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "int 200"
+echo "ip nat inside"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "int 999"
+echo "ip nat inside"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "ex"
+echo "wr"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "conf t"
+echo "int tunnel.1"
+echo "ip address 10.10.10.9/30"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ip tunnel 172.16.4.14 172.16.5.14 mode gre"
+echo "ex"
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "wr"
+echo "conf t"
+echo "router ospf 1"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "network 10.10.10.8/30 area 0"
+echo "network 192.168.1.0/26 area 0"
+echo "network 192.168.1.64/28 area 0"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "network 192.168.1.80/29 area 0"
+echo "passive-interface isp"
+echo "passive-interface 100"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "passive-interface 200"
+echo "passive-interface 999"
+echo "area 0 authentication message-digest"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "int tunnel.1"
+echo "ip ospf authentication-key P@ssw0rd"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ip ospf authentication message-digest"
+echo "ex"
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "wr"
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "The End"
+#
+echo "M1_3_BR-RTR"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "en"
+echo "conf t"
+echo "hostname br-rtr.au-team.irpo"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "username net_admin"
+echo "password P@ssw0rd"
+echo "role admin"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ntp timezone utc+3"
+echo "ex"
+echo "wr"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "conf t"
+echo "int isp"
+echo "ip address 172.16.5.14/28"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "int lan"
+echo "ip address 192.168.2.1/27"
+echo "port te0"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "service-instance isp"
+echo "encapsulation untagged"
+echo "connect ip interface isp"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "port te1"
+echo "service-instance lan"
+echo "encapsulation untagged"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "connect ip interface lan"
+echo "ex"
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ip route 0.0.0.0/0 172.16.5.1"
+echo "ip name-server 77.88.8.8"
+echo "ip nat pool INTERNET 192.168.2.1-192.168.2.30"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ip nat source dynamic inside-to-outside pool INTERNET overload 172.16.5.14"
+echo "int isp"
+echo "ip nat outside"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "int lan"
+echo "ip nat inside"
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "wr"
+echo "conf t"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "int tunnel.1"
+echo "ip address 10.10.10.10/30"
+echo "ip tunnel 172.16.5.14 172.16.4.14 mode gre"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "ex"
+echo "wr"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "conf t"
+echo "router ospf 1"
+echo "network 10.10.10.8/30 area 0"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+network 192.168.2.0/27 area 0
+echo "area 0 authentication message-digest"
+echo "passive-interface isp"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "passive-interface lan"
+echo "ex"
+echo "int tunnel.1"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ip ospf authentication-key P@ssw0rd"
+echo "ip ospf authentication message-digest"
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "wr"
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "The End"
+#
+echo "M1_4_HQ-SRV"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "hostnamectl hostname hq-srv.au-team.irpo"
+echo "timedatectl set-timezone Europe/Moscow"
+echo "sed -i '1c\BOOTPROTO=static' /etc/net/ifaces/ens18/options"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '4c\SYSTEMD_BOOTPROTO=static' /etc/net/ifaces/ens18/options"
+echo "echo 192.168.1.2/26 > /etc/net/ifaces/ens18/ipv4address"
+echo "echo default via 192.168.1.1 > /etc/net/ifaces/ens18/ipv4route"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "echo nameserver 77.88.8.8 > /etc/net/ifaces/ens18/resolv.conf"
+echo "systemctl restart network"
+echo "apt-get update"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "apt-get install -y bind bind-utils"
+echo "useradd -m sshuser -u 2026 -s /bin/bash"
+echo "passwd sshuser"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "usermod -aG wheel sshuser"
+echo "sed -i '100c\WHEEL_USERS ALL=(ALL:sshuser) NOPASSWD: ALL' /etc/sudoers"
+echo "sed -i '13c\Port 2026' /etc/openssh/sshd_config"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '30c\AllowUsers sshuser' /etc/openssh/sshd_config"
+echo "sed -i '34c\MaxAuthTries 2' /etc/openssh/sshd_config"
+echo "sed -i '105c\Banner /etc/banner.net' /etc/openssh/sshd_config"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "touch /etc/banner.net"
+echo "echo Authorized access only! > /etc/banner.net"
+echo "sed -i '1a\ ' /etc/openssh/sshd_config"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "systemctl restart sshd.service"
+echo "ssh -p 2026 sshuser@localhost"
+echo "sed -i '6c\#include "/etc/bind/rndc.conf";' /etc/bind/named.conf"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '16c\\tlisten-on { 192.168.1.2; };' /etc/bind/options.conf"
+echo "sed -i '17c\\t//listen-on-v6 { ::1; };' /etc/bind/options.conf"
+echo "sed -i '24c\\tforwarders { 77.88.8.8; };' /etc/bind/options.conf"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '29c\\tallow-query { any; };' /etc/bind/options.conf"
+echo "sed -i '40c\\tallow-query-cache { any; };' /etc/bind/options.conf"
+echo "sed -i '49c\\tallow-recursion { any; };' /etc/bind/options.conf"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '7a\ ' /etc/bind/local.conf"
+echo "sed -i '8c\zone "au-team.irpo" {' /etc/bind/local.conf"
+echo "sed -i '8a\ ' /etc/bind/local.conf"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '9c\    type master;' /etc/bind/local.conf"
+echo "sed -i '9a\ ' /etc/bind/local.conf"
+echo "sed -i '10c\    file "/etc/bind/zone/db.au";' /etc/bind/local.conf"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '10a\ ' /etc/bind/local.conf"
+echo "sed -i '11c\};' /etc/bind/local.conf"
+echo "sed -i '11a\ ' /etc/bind/local.conf"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '12c\zone "1.168.192.in-addr.arpa" {' /etc/bind/local.conf"
+echo "sed -i '12a\ ' /etc/bind/local.conf"
+echo "sed -i '13c\    type master;' /etc/bind/local.conf"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '13a\ ' /etc/bind/local.conf"
+echo "sed -i '14c\    file "/etc/bind/zone/db.revers";' /etc/bind/local.conf"
+echo "sed -i '14a\ ' /etc/bind/local.conf"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '15c\};' /etc/bind/local.conf"
+echo "sed -i '15a\ ' /etc/bind/local.conf"
+echo "cd /etc/bind/zone"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "cp localhost db.au"
+echo "sed -i '2c\@\tIN\tSOA\tau-team.irpo. root.au-team.irpo. (' db.au"
+echo "sed -i '9c\\tIN\tNS\tau-team.irpo.' db.au"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '10c\\tIN\tA\t192.168.1.2' db.au"
+echo "cp db.au db.revers"
+echo "chown root:named db.*"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '10a\ ' db.au"
+echo "sed -i '11c\hq-srv\tIN\tA\t192.168.1.2' db.au"
+echo "sed -i '11a\ ' db.au"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '12c\hq-rtr\tIN\tA\t192.168.1.1' db.au"
+echo "sed -i '12a\ ' db.au"
+echo "sed -i '13c\br-srv\tIN\tA\t192.168.2.2' db.au"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '13a\ ' db.au"
+echo "sed -i '14c\br-rtr\tIN\tA\t192.168.2.1' db.au"
+echo "sed -i '14a\ ' db.au"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '15c\hq-cli\tIN\tA\t192.168.1.66' db.au"
+echo "sed -i '15a\ ' db.au"
+echo "sed -i '16c\docker\tIN\tCNAME\thq-rtr' db.au"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '16a\ ' db.au"
+echo "sed -i '17c\web\tIN\tCNAME\tbr-rtr' db.au"
+echo "sed -i '17a\ ' db.au"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '10a\ ' db.revers"
+echo "sed -i '11c\1\tIN\tPTR\thq-rtr.au-team.irpo.' db.revers"
+echo "sed -i '11a\ ' db.revers"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '12c\2\tIN\tPTR\thq-srv.au-team.irpo.' db.revers"
+echo "sed -i '12a\ ' db.revers"
+echo "sed -i '13c\66\tIN\tPTR\thq-cli.au-team.irpo.' db.revers"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '13a\ ' db.revers"
+echo "cd /etc/bind/zone/"
+echo "systemctl restart network"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "systemctl restart bind"
+echo "named-checkzone au-team.irpo db.au"
+echo "named-checkzone 1.168.192.in-addr.arpa db.revers"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '1c\nameserver 192.168.1.2' /etc/net/ifaces/ens18/resolv.conf"
+echo "sed -i '1a\ ' /etc/net/ifaces/ens18/resolv.conf"
+echo "sed -i '2c\search au-team.irpo' /etc/net/ifaces/ens18/resolv.conf"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "systemctl restart network"
+echo "systemctl restart bind"
+echo "host hq-srv"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "host 192.168.1.2"
+echo "host web"
+echo "host ya.ru"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "The End"
+#
+echo "M1_5_BR-SRV"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "hostnamectl hostname br-srv.au-team.irpo"
+echo "timedatectl set-timezone Europe/Moscow"
+echo "sed -i '1c\BOOTPROTO=static' /etc/net/ifaces/ens18/options"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '4c\SYSTEMD_BOOTPROTO=static' /etc/net/ifaces/ens18/options"
+echo "echo 192.168.2.2/27 > /etc/net/ifaces/ens18/ipv4address"
+echo "echo default via 192.168.2.1 > /etc/net/ifaces/ens18/ipv4route"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "echo nameserver 77.88.8.8 > /etc/net/ifaces/ens18/resolv.conf"
+echo "systemctl restart network"
+echo "useradd -m sshuser -u 2026 -s /bin/bash"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "passwd sshuser"
+echo "usermod -aG wheel sshuser"
+echo "sed -i '100c\WHEEL_USERS ALL=(ALL:sshuser) NOPASSWD: ALL' /etc/sudoers"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '13c\Port 2026' /etc/openssh/sshd_config"
+echo "sed -i '30c\AllowUsers sshuser' /etc/openssh/sshd_config"
+echo "sed -i '34c\MaxAuthTries 2' /etc/openssh/sshd_config"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '105c\Banner /etc/banner.net' /etc/openssh/sshd_config"
+echo "touch /etc/banner.net"
+echo "echo Authorized access only! > /etc/banner.net"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "sed -i '1a\ ' /etc/openssh/sshd_config"
+echo "systemctl restart sshd.service"
+echo "ssh -p 2026 sshuser@localhost"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "The End"
+#
+echo "M1_6_HQ-CLI"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "hostnamectl hostname hq-cli.au-team.irpo"
+echo "timedatectl set-timezone Europe/Moscow"
+echo "ip a"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "Copy MAC-address"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "The End"
+#
+echo "M1_7_HQ-RTR"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "en"
+echo "conf t"
+echo "ip name-server 192.168.1.2"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ip domain-name au-team.irpo"
+echo "ip domain-lookup"
+echo "no ip name-server 77.88.8.8"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "wr"
+echo "conf t"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ip pool hq 1"
+echo "range 192.168.1.67-192.168.1.78"
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "dhcp-server 1"
+echo "static ip 192.168.1.66"
+echo "client-id mac XX:XX:XX:XX:XX:XX <-insert CLI MAC"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "mask 255.255.255.240"
+echo "gateway 192.168.1.65"
+echo "dns 192.168.1.2"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "domain-search au-team.irpo"
+echo "ex"
+echo "pool hq 1"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "mask 255.255.255.240"
+echo "gateway 192.168.1.65"
+echo "dns 192.168.1.2"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "domain-search au-team.irpo"
+echo "int 200"
+echo "dhcp-server 1"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "ex"
+echo "wr"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "The End"
+#
+echo "M1_8_BR-RTR"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "en"
+echo "conf t"
+echo "ip name-server 192.168.1.2"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ip domain-name au-team.irpo"
+echo "ip domain-lookup"
+echo "no ip name-server 77.88.8.8"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+echo "wr"
+echo "ping hq-srv"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "ex"
+#
+while true; do
+read -n1 key
+if [[ "$key" == 'y' ]]; then
+break
+fi
+done
+clear
+#
+echo "The End"
+#
